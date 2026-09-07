@@ -21,6 +21,19 @@ class FounderActionRequired(RuntimeError):
     """A founder must accept terms or provision a gated model artifact."""
 
 
+class BackendImplementationMissing(NotImplementedError):
+    """The bundled reconstruction node has no real model execution path."""
+
+    code = "backend_implementation_missing"
+
+    def __init__(self, stage: str):
+        self.stage = stage
+        super().__init__(
+            f"{self.code}: {stage} is mock-only; real model execution is not "
+            "implemented. Credentials, model weights, and GPU dependencies "
+            "cannot enable it. Mock output is only an orchestration fixture.")
+
+
 def foundationpose_adapter(environ: dict[str, str] | None = None) -> dict:
     """Resolve the commercial NGC FoundationPose artifact without leaking keys."""
     env = os.environ if environ is None else environ

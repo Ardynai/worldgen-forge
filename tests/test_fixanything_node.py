@@ -44,7 +44,7 @@ def test_mock_node_transforms_video_deterministically_and_matches_history_contra
     monkeypatch.setenv("TERMINALIA_COMFY_OUTPUT", str(output_root))
     monkeypatch.setenv("TERMINALIA_FIXANYTHING_MOCK", "1")
     inputs = {
-        "artifacts": [{"uri": str(source), "kind": "video"}],
+        "artifacts": [{"uri": source.as_uri(), "kind": "video"}],
         "seed": 41,
         "base_weights": FIX_ANYTHING_WEIGHTS["base"],
         "lora_weights": FIX_ANYTHING_WEIGHTS["lora"],

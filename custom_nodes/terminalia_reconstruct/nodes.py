@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 import struct
 
-from terminalia.reconstruction import FOUNDATIONPOSE_ACTION, FounderActionRequired
+from terminalia.reconstruction import BackendImplementationMissing
 
 
 def _mock_glb(path: Path, marker: bytes) -> str:
@@ -42,40 +42,28 @@ def reconstruct_instances(tracks: str | dict, video_path: str, source_sha256: st
                           mesh_steps: list[int], sam2_revision: str, trellis2_model: str,
                           trellis2_revision: str,
                           foundationpose_version: str) -> dict:
+    if os.environ.get("TERMINALIA_RECONSTRUCT_MOCK") != "1":
+        raise BackendImplementationMissing("TRELLIS.2/FoundationPose reconstruction")
     tracks = json.loads(tracks) if isinstance(tracks, str) else tracks
-    if os.environ.get("TERMINALIA_RECONSTRUCT_MOCK") == "1":
-        instances = []
-        for index, track in enumerate(tracks["instances"]):
-            marker = hashlib.sha256(f"{source_sha256}:{seed}:{index}".encode()).digest()
-            relative = Path("meshes") / f"{track['id']}.glb"
-            _mock_glb(Path(output_dir) / relative, marker)
-            instances.append({"id": track["id"], "mesh": relative.as_posix(), "tris": 1,
-                              "bbox_size": [1.0 + index, 1.0, 1.0],
-                              "poses": [{"frame": box["frame"],
-                                         "translation": [index * 2.0, 0.0, frame * 0.1],
-                                         "rotation_xyzw": [0.0, 0.0, 0.0, 1.0]}
-                                        for frame, box in enumerate(track["bboxes"])]})
-        return {"instances": instances, "models": [
-            {"name": "SAM 2", "version": sam2_revision, "license": "Apache-2.0"},
-            {"name": "TRELLIS.2-4B", "version": trellis2_revision, "license": "MIT"},
-            {"name": "FoundationPose (NVIDIA NGC)", "version": foundationpose_version,
-             "license": "NVIDIA Open Model License"},
-        ]}
-    if not (os.environ.get("NGC_API_KEY") or os.environ.get("FOUNDATIONPOSE_NGC_DIR")):
-        raise FounderActionRequired(FOUNDATIONPOSE_ACTION)
-    try:
-        import torch  # noqa: F401
-        import trimesh  # noqa: F401
-    except ImportError as exc:
-        raise RuntimeError(
-            "TRELLIS.2/FoundationPose runtime is unwired: install backend model "
-            "dependencies in the reconstruction custom-node environment.") from exc
-    raise RuntimeError(
-        "Real TRELLIS.2/FoundationPose execution requires the backend runtime "
-        "implementation; no model weights are distributed with Terminalia.")
+    instances = []
+    for index, track in enumerate(tracks["instances"]):
+        marker = hashlib.sha256(f"{source_sha256}:{seed}:{index}".encode()).digest()
+        relative = Path("meshes") / f"{track['id']}.glb"
+        _mock_glb(Path(output_dir) / relative, marker)
+        instances.append({"id": track["id"], "mesh": relative.as_posix(), "tris": 1,
+                          "bbox_size": [1.0 + index, 1.0, 1.0],
+                          "poses": [{"frame": box["frame"],
+                                     "translation": [index * 2.0, 0.0, frame * 0.1],
+                                     "rotation_xyzw": [0.0, 0.0, 0.0, 1.0]}
+                                    for frame, box in enumerate(track["bboxes"])]})
+    return {"execution_mode": "mock", "instances": instances, "models": [
+        {"name": "Terminalia reconstruction mock", "version": "1",
+         "license": "test-only; no model executed"},
+    ]}
 
 
 class TerminaliaReconstructInstances:
+    DESCRIPTION = str(BackendImplementationMissing("TRELLIS.2/FoundationPose reconstruction"))
     RETURN_TYPES = ("TERMINALIA_RESULT",)
     RETURN_NAMES = ("terminalia_result",)
     OUTPUT_NODE = True
@@ -101,4 +89,4 @@ class TerminaliaReconstructInstances:
 
 NODE_CLASS_MAPPINGS = {"TerminaliaReconstructInstances": TerminaliaReconstructInstances}
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "TerminaliaReconstructInstances": "Terminalia TRELLIS.2 + NGC FoundationPose"}
+    "TerminaliaReconstructInstances": "Terminalia Reconstruction (mock only)"}

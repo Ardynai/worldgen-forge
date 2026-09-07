@@ -5,7 +5,7 @@ import hashlib
 from pathlib import Path
 
 from .backends import Backend, GpuProfile
-from .reconstruction import build_reconstruction_workflow
+from .reconstruction import BackendImplementationMissing, build_reconstruction_workflow
 from .safety import configured_backend, has_real_provenance
 from .schema import (
     AssetEntry, InstancePose, ModelRef, Physics, PlacedObject, VideoProvenance,
@@ -84,6 +84,8 @@ def ingest_video(request: dict, backend: Backend, profile: GpuProfile) -> dict:
     }
     scene = _run(backend, build_reconstruction_workflow(scene_request, profile),
                  f"terminalia-ingest-{job_id}")
+    if scene.get("execution_mode") == "mock":
+        raise BackendImplementationMissing("scene reconstruction returned mock output")
     instances = scene.get("instances")
     if not isinstance(instances, list) or not instances:
         raise RuntimeError("scene reconstruction returned no instances")

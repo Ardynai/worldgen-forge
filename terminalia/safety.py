@@ -185,7 +185,7 @@ def check_video(video_path: str | Path, source_sha256: str) -> SafetyVerdict:
         return SafetyVerdict(False, _model_for(backend), 0, ["decode-error"], "")
     if backend == "mock":
         raw = os.environ.get("TERMINALIA_SAFETY_MOCK_RESULT", "unsafe")
-        return SafetyVerdict(raw == "safe", _model_for("openai"), len(frames),
+        return SafetyVerdict(raw == "safe", _model_for("mock"), len(frames),
                              [] if raw == "safe" else ["mock-unsafe"], source_sha256[:16])
     try:
         return _openai(frames) if backend == "openai" else _nemotron(frames)
@@ -196,7 +196,10 @@ def check_video(video_path: str | Path, source_sha256: str) -> SafetyVerdict:
 
 
 def _model_for(backend: str) -> dict[str, str]:
-    if backend in {"openai", "mock"}:
+    if backend == "mock":
+        return {"name": "Terminalia safety mock", "version": "1",
+                "license": "test-only; no moderation model executed"}
+    if backend == "openai":
         return {"name": "omni-moderation-latest", "version": "latest",
                 "license": "OpenAI Services Agreement and Usage Policies"}
     return {"name": "nvidia/nemotron-3.5-content-safety", "version": "3.5",

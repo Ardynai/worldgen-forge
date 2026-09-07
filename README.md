@@ -132,7 +132,7 @@ Comfy Cloud or a rental box.
 | 4× upscaling | 4x-UltraSharp, 4x_NMKD-Siax | ✅ |
 | Style/character LoRA training | ai-toolkit (GUI at :8670, CLI configs in `config/examples/`) | ✅ |
 | Video → frames | VHS_LoadVideo → SaveImage | ✅ verified |
-| Video scene reconstruction | SAM 2 → TRELLIS.2 → FoundationPose (NGC) | ✅ adapter + mock; runtime models required |
+| Video scene reconstruction | SAM 2 → TRELLIS.2 → FoundationPose (NGC) | Mock-only; real model execution is unimplemented ([details](docs/how-it-works/video-ingestion.md)) |
 
 LoRA workflow: train a world-style or character LoRA in ai-toolkit
 (`ui` GUI or `config/examples/train_lora_chroma_24gb.yaml` as template) →
