@@ -1,7 +1,29 @@
-# DECISION — Naming collision: terminalia engine vs "Terminalia" multiverse rebrand
+# DECISION — Worldgen Forge repository identity
 
-**Status:** 🧭 OPEN decision (parked) · **Owner:** Josh (founder) · **Area:** repo identity
-**Committed:** 2026-08-31 (final parking pass)
+**Status:** decided 2026-09-08 under the founder's Batch 6 rename instruction.
+**Repository:** `Ardynai/worldgen-forge` (formerly `Ardynai/terminalia`).
+The descriptive name identifies the world-generation engine and leaves Terminalia
+as the Multiverse public brand. See D9 in [DECISIONS.md](../DECISIONS.md).
+
+The GitHub repository identity, history and pull requests are preserved. Python
+package/distribution/CLI names, `world.json`, custom-node names and engine export
+identifiers are compatibility contracts and remain `terminalia`/`Terminalia` where
+already defined. No model, dependency, license, credential, deployment or runtime
+behavior changes. Existing local worktree directories need no move.
+
+For an existing clone, update the relevant remote URL to
+`https://github.com/Ardynai/worldgen-forge.git`. The shared local canonical
+repository's `github-fallback` remote is updated as part of this rename. Other
+clones and external notes may still contain the historical URL; no private vault,
+memory or Notion record is edited by this task. Historical PR evidence keeps its
+original provenance. Old-name redirects were checked at the rename; callers
+should still adopt the new URL rather than depend on redirects indefinitely.
+
+## Historical analysis — 2026-08-31, superseded by the decision above
+
+The options below preserve the original reasoning, not an open decision or build
+queue. The old proposal to rename imports together with the repository is not
+part of the accepted scope.
 
 ## The collision
 Two things currently carry the name:
@@ -46,6 +68,10 @@ written name-neutrally and survive either outcome.
   via one mechanical PR, README/AGENT/ONBOARDING sweep, vault + Hermes memory
   update (repo paths), Notion repo records.
 
-## Trigger + founder action
-**Josh decides.** Default until decided: engine repo stays
-`Ardynai/terminalia`; no code changes. Record the verdict here when made.
+## Recorded outcome
+
+The Batch 6 instruction explicitly authorized renaming this repository and left
+the name to engineering judgment. Option A was selected as `worldgen-forge`;
+option B would disturb the already established Multiverse brand, and option C
+would keep the URL collision. This resolves the repository naming item only,
+not any separate founder landing or licensing question.
