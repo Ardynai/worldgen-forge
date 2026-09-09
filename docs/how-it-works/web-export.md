@@ -19,6 +19,8 @@ from the first 120 prompt characters, the world seed, `units: meters`, and
 `upAxis`. Its `asset` contains `file: scene.splat`, SHA-256, byte count, point
 count, position-center `bounds.min`/`bounds.max`, license and attribution.
 Bounds exclude Gaussian scale extents. No axis or coordinate conversion occurs.
+Seeds must be JavaScript-safe integers (+/-9,007,199,254,740,991), otherwise
+export fails `SPLAT_SEED_OUT_OF_RANGE` rather than silently rounding in a browser.
 No source paths, history, credentials, URLs or executable scripts are exported.
 The title can contain user content: export is an explicit local action, not
 automatic disclosure to a service. Consumers must render metadata as text.

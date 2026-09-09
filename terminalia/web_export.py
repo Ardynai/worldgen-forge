@@ -59,6 +59,8 @@ def export_splat_web_bundle(world_dir: str, world: dict) -> str:
         raise SplatExportError("SPLAT_WORLD_INVALID") from error
     if model.splat is None:
         raise SplatExportError("SPLAT_SOURCE_REQUIRED")
+    if abs(model.spec.seed) > 9_007_199_254_740_991:
+        raise SplatExportError("SPLAT_SEED_OUT_OF_RANGE")
     root = Path(world_dir).resolve()
     source = _inside(root, model.splat.file)
     if source.suffix.lower() != ".splat":

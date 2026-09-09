@@ -99,6 +99,13 @@ def test_missing_descriptor_and_unknown_fields(tmp_path):
         export_splat_web_bundle(str(tmp_path), world)
 
 
+def test_seed_must_roundtrip_in_javascript(tmp_path):
+    world = source(tmp_path)
+    world["spec"]["seed"] = 9_007_199_254_740_992
+    with pytest.raises(SplatExportError, match="^SPLAT_SEED_OUT_OF_RANGE$"):
+        export_splat_web_bundle(str(tmp_path), world)
+
+
 def test_existing_bundle_is_preserved(tmp_path):
     world = source(tmp_path)
     output = Path(export_splat_web_bundle(str(tmp_path), world))
