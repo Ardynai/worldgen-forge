@@ -118,6 +118,16 @@ class Refinement(BaseModel):
     fix_anything: FixAnythingPass | None = None
 
 
+class SplatScene(BaseModel):
+    """A local source descriptor; it is not publication consent."""
+    model_config = {"extra": "forbid"}
+    file: str = Field(min_length=1, max_length=512)
+    sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    license: str = Field(min_length=1, max_length=128)
+    attribution: str = Field(min_length=1, max_length=500)
+    up_axis: Literal["Y", "Z"] = "Y"
+
+
 class World(BaseModel):
     version: str = "0.3"
     spec: WorldSpec
@@ -128,6 +138,7 @@ class World(BaseModel):
     refine: Refinement = Field(default_factory=Refinement)
     history: list[HistoryEntry] = Field(default_factory=list)
     video_provenance: VideoProvenance | None = None
+    splat: SplatScene | None = None
 
     def save(self, path: str) -> None:
         import json

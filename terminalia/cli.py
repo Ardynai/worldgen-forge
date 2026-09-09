@@ -71,6 +71,23 @@ def cmd_validate(args: argparse.Namespace) -> None:
           f"{len(w.assets)} assets, {len(w.history)} history entries")
 
 
+def cmd_export_web(args: argparse.Namespace) -> None:
+    from .web_export import SplatExportError, export_splat_web_bundle
+    try:
+        world = World.load(args.world)
+        output = export_splat_web_bundle(os.path.dirname(os.path.abspath(args.world)), world.model_dump())
+    except SplatExportError as error:
+        print(error.code, file=sys.stderr)
+        raise SystemExit(1) from error
+    except OSError:
+        print("SPLAT_WORLD_UNAVAILABLE", file=sys.stderr)
+        raise SystemExit(1)
+    except ValueError:
+        print("SPLAT_WORLD_INVALID", file=sys.stderr)
+        raise SystemExit(1)
+    print(output)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(prog="terminalia")
     sub = ap.add_subparsers(required=True)
@@ -88,6 +105,10 @@ def main() -> None:
     v = sub.add_parser("validate")
     v.add_argument("world")
     v.set_defaults(func=cmd_validate)
+
+    export = sub.add_parser("export-web", help="Export the world's validated splat as a data-only web bundle")
+    export.add_argument("world")
+    export.set_defaults(func=cmd_export_web)
 
     args = ap.parse_args()
     args.func(args)
