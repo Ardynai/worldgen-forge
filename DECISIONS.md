@@ -46,3 +46,14 @@ contract. The selected engine, pinned model and license, seed, backend/profile,
 and returned video artifacts are recorded in `World.video_provenance`; LTX-2 is
 fail-closed behind its revenue attestation. The schema contract moves from 0.2
 to 0.3. (2026-08-31)
+
+## D9 — Worldgen Forge is the repository name; runtime names stay compatible
+
+The founder's Batch 6 instruction authorizes renaming the engine repository to
+stop its collision with Terminalia, the Multiverse public brand. Selected
+`Ardynai/worldgen-forge`: its name describes the generation pipeline without
+reopening the platform brand. Preserve the repository ID, history, open PRs,
+Python distribution/import/CLI names, world schema and generated engine/custom
+node identifiers. This is repository metadata and documentation only; a future
+package migration would be a separate explicit compatibility task. See
+[the recorded naming decision](docs/naming-collision.plan.md). (2026-09-08)

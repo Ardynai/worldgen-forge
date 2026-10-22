@@ -71,7 +71,7 @@ Josh is parking active build. Every remaining item is committed as a plan doc
 | [`tests/real-weights-e2e.plan.md`](../tests/real-weights-e2e.plan.md) | real-weights E2E (fix_anything + safety) | founder actions |
 | [`docs/founder-activation-runbook.plan.md`](founder-activation-runbook.plan.md) | exact steps to flip gated models | Josh's decision |
 | [`docs/tool-integration-build-tickets.plan.md`](tool-integration-build-tickets.plan.md) | splat gallery · img2threejs-look · Gemini STT · OVOW/code-world-model/Block3D slots · DiffusionOPSD v2 track | per-ticket triggers |
-| [`docs/naming-collision.plan.md`](naming-collision.plan.md) | terminalia engine vs "Terminalia" multiverse rebrand | Josh decides |
+| [`docs/naming-collision.plan.md`](naming-collision.plan.md) | repository renamed to `worldgen-forge`; runtime identifiers preserved | D9, 2026-09-08 |
 
 Open PRs awaiting merge (Planner corroboration at each SHA): #4 fix_anything
 node (`13806d5`) · #5 flythrough (`587d9f7`) · #6 scene reconstruction

@@ -1,4 +1,10 @@
-# Terminalia
+# Worldgen Forge
+
+Repository: [Ardynai/worldgen-forge](https://github.com/Ardynai/worldgen-forge).
+Formerly `Ardynai/terminalia`, this is the **world-generation engine**, separate
+from Terminalia, the public Multiverse platform. See [the naming decision](docs/naming-collision.plan.md).
+The Python distribution, `terminalia` imports/CLI and generated engine identifiers
+remain unchanged for compatibility; the repository rename requires no code migration.
 
 <p align="center">
   <strong>Agentic 3D open-world generation at scale — on any GPU, or none at all.</strong>
@@ -8,7 +14,7 @@
 
 ## What is this?
 
-Terminalia turns one text prompt into an **explorable, engine-ready 3D world**:
+Worldgen Forge turns one text prompt into an **explorable, engine-ready 3D world**:
 
 ```
 "volcanic island with a ruined temple and pirate cove"
