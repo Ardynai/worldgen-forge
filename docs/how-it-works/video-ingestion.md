@@ -1,23 +1,33 @@
 # Video ingestion
 
+**The bundled reconstruction pipeline is mock-only.** Real SAM 2 segmentation
+and TRELLIS.2/FoundationPose execution are not implemented. Provisioning model
+keys, weights, or GPU dependencies cannot make these nodes work. The generic
+backend transport and ingestion orchestration exist; that is not evidence of
+a working video-to-world model pipeline.
+
 ## Owns
 
 The optional `VIDEO INGEST` path turns a consented monocular video into the
 assets and layout records consumed by PLACE and EXPORT. Validated `world.json`
 remains the only pipeline state.
 
-## Implemented flow
+## Implemented orchestration and planned model execution
 
 `terminalia.ingest.ingest_video(request, backend, profile)` hashes the source,
 requires a consent note, and runs the fail-closed content-safety job before it
 submits reconstruction. The reconstruction graph connects two custom packages:
 
-1. `terminalia_segment` uses SAM 2 video segmentation and tracking to produce
-   per-instance masks and bounding boxes.
-2. `terminalia_reconstruct` crops each track, creates its CAD-reference mesh
-   with TRELLIS.2-4B, then tracks 6DoF poses with NVIDIA FoundationPose from
-   NGC. FoundationPose is model-based: each generated object mesh is its pose
-   track's required CAD reference.
+1. `terminalia_segment` is intended to produce SAM 2 instance masks and tracks.
+2. `terminalia_reconstruct` is intended to produce TRELLIS.2 meshes and
+   FoundationPose 6DoF tracks using each mesh as a CAD reference.
+
+Both bundled nodes expose a `mock only` display name and a description of the
+missing implementation. Without `TERMINALIA_RECONSTRUCT_MOCK=1`, they raise
+`terminalia.reconstruction.BackendImplementationMissing` (a
+`NotImplementedError`) with `code="backend_implementation_missing"` and the
+failing `stage`, before checking credentials, importing GPU libraries, or
+writing artifacts. This is an engineering dependency, not a founder key task.
 
 The backend returns relative GLB paths, triangle counts, bounds, pose tracks,
 and optional physics. Ingestion validates the contract and maps the first pose
@@ -31,18 +41,18 @@ to PLACE-compatible coordinates without discarding the full track.
 | TRELLIS.2-4B | MIT | Hugging Face revision pinned in `reconstruction.py` |
 | FoundationPose (NVIDIA NGC) | NVIDIA Open Model License | `NGC_API_KEY` or `FOUNDATIONPOSE_NGC_DIR` |
 
-No weights are committed. The two node packages import-guard their GPU/model
-dependencies. Backends install those dependencies and fetch the pinned model
-artifacts. Missing FoundationPose credentials fail the pose stage with:
-
-> Founder action required: accept the NVIDIA Open Model License and set
-> `NGC_API_KEY`, or download FoundationPose from NVIDIA NGC and set
-> `FOUNDATIONPOSE_NGC_DIR`.
+These are planned model identities, not execution provenance. No weights are
+committed. `foundationpose_adapter()` remains a separate artifact-configuration
+helper; satisfying its terms/key checks does not implement either node.
 
 For dependency-free orchestration tests, set
 `TERMINALIA_RECONSTRUCT_MOCK=1`. Mock execution writes deterministic simple
-GLBs and fixed pose tracks from the source hash and seed; real execution is the
-default.
+GLBs and fixed pose tracks from the source hash and seed. Its results carry
+`execution_mode="mock"` and identify `Terminalia reconstruction mock`, with
+`test-only; no model executed` provenance, rather than listing real models.
+Ingestion rejects mock scene results instead of producing a completed world.
+The node fixtures can still be tested directly; they do not establish real
+segmentation, reconstruction, pose quality, or commercial model availability.
 
 SAM 3 is deliberately not implemented: its custom Meta license requires legal
 review before it can replace Apache-2.0 SAM 2. Hi3DGen weights are not wired

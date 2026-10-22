@@ -39,6 +39,19 @@ request becomes an unsafe verdict.
 `TERMINALIA_SAFETY_MOCK=1` is test-only and must never be present in production.
 Without that explicit value, the node cannot enter mock mode.
 
+Every mock verdict, including safe, decode-error, and source-hash-mismatch
+results, identifies `Terminalia safety mock` with `test-only; no moderation
+model executed` provenance. It never names OpenAI or NVIDIA. Consequently
+`has_real_provenance()` returns false and ingestion rejects even a safe mock
+verdict before submitting reconstruction. This corrects the previous mock
+path's misleading OpenAI identity.
+
+The model-name/license check recognizes the configured provider vocabulary;
+it is not cryptographic proof that a remote backend ran that provider. Eight
+sampled frames also do not establish safety of every frame in a whole video.
+Real reconstruction remains unimplemented in the bundled nodes; see
+[video-ingestion.md](video-ingestion.md).
+
 Before enabling video ingestion, Josh must:
 
 1. Accept OpenAI's applicable agreement/policies and install `OPENAI_API_KEY`

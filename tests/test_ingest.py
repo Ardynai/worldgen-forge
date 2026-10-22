@@ -1,5 +1,6 @@
 """Video-ingestion orchestration tests with the model boundary stubbed."""
 import hashlib
+from pathlib import Path
 
 import pytest
 
@@ -79,7 +80,7 @@ def test_video_ingestion_builds_world_and_exports(tmp_path):
     export_dir = export_glb_bundle(str(tmp_path), data)
     assert (tmp_path / "world.json").is_file()
     assert (tmp_path / "export" / "gltf" / "chair-1.glb").is_file()
-    assert export_dir.endswith("export/gltf")
+    assert Path(export_dir) == tmp_path / "export" / "gltf"
 
 
 def test_video_ingestion_fails_closed(tmp_path):
